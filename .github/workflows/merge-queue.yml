@@ -8,16 +8,23 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout staging
         uses: actions/checkout@v4
         with:
           ref: staging
       - name: Reset staging branch
-        uses: Joao208/resync-branch@1.5.0
-        with:
-          PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          BRANCH_NAME: staging
-          DEFAULT_BRANCH: main
+        # uses: Joao208/resync-branch@1.5.0
+        # with:
+        #   PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        #   BRANCH_NAME: staging
+        #   DEFAULT_BRANCH: main
+        run: |
+          echo "github.ref: ${{ github.ref }}"
+          git status
+          git branch
+          git fetch origin main
+          git reset --hard origin/main
+          git push origin staging --force
       - name: Merge PR branch to staging
         uses: devmasx/merge-branch@master
         with:

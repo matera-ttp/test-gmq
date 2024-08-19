@@ -44,4 +44,3 @@ jobs:
       - name: Sleep and exit
         run: |
           sleep 60
-          exit 1

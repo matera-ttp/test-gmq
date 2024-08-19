@@ -6,6 +6,12 @@ jobs:
   validate-pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Reset staging branch
+        uses: Joao208/resync-branch@1.5.0
+        with:
+          PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          BRANCH_NAME: staging
+          DEFAULT_BRANCH: main
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Show files in merge run
@@ -14,4 +20,5 @@ jobs:
           tree -a -I '.git'
           git status
           ls -al
-          sleep 120
+          sleep 60
+          exit 1

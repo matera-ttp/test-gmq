@@ -11,7 +11,7 @@ jobs:
         with:
           PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
           BRANCH_NAME: staging
-          DEFAULT_BRANCH: develop
+          DEFAULT_BRANCH: main
       - name: Merge PR branch to staging
         uses: devmasx/merge-branch@master
         with:

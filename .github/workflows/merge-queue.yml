@@ -6,12 +6,21 @@ jobs:
   validate-pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Show files in merge run
+        run: |
+          pwd
+          git status
+          tree -a -I '.git'
       - name: Reset staging branch
         uses: Joao208/resync-branch@1.5.0
         with:
           PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
           BRANCH_NAME: staging
           DEFAULT_BRANCH: main
+      - name: Git status
+        run: git status
       - name: Merge PR branch to staging
         uses: devmasx/merge-branch@master
         with:
@@ -19,13 +28,12 @@ jobs:
           from_branch: ${{ github.ref }}
           target_branch: staging
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Show files in merge run
+      - name: Get latest commit SHA
         run: |
-          pwd
-          tree -a -I '.git'
           git status
-          ls -al
+          git fetch origin staging
+          echo "Staging latest commit: $(git rev-parse origin/staging)"
+      - name: Sleep and exit
+        run: |
           sleep 60
           exit 1

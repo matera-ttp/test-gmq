@@ -15,5 +15,5 @@ jobs:
           tree -a -I '.git'
           git status
           ls -al
-      - name: Run fast CI (emulated by a short sleep)
-        run: sleep 10
+      - name: Run CI (emulated by sleep)
+        run: sleep 120

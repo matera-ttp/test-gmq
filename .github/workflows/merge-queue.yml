@@ -17,6 +17,3 @@ jobs:
           git status
           ls -al
           sleep 120
-      - name: Fail this job
-        run: |
-          exit 1

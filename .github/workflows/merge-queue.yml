@@ -14,6 +14,7 @@ jobs:
         run: |
           pwd
           git status
+          echo "github.ref: ${{ github.ref }}"
           tree -a -I '.git'
       - name: Reset staging branch
         uses: Joao208/resync-branch@1.5.0
@@ -22,7 +23,9 @@ jobs:
           BRANCH_NAME: staging
           DEFAULT_BRANCH: main
       - name: Git status
-        run: git status
+        run: |
+          git status
+          echo "github.ref: ${{ github.ref }}"
       - name: Merge PR branch to staging
         uses: devmasx/merge-branch@master
         with:
@@ -35,6 +38,7 @@ jobs:
           git status
           git fetch origin staging
           echo "Staging latest commit: $(git rev-parse origin/staging)"
+          echo "github.ref: ${{ github.ref }}"
       - name: Sleep and exit
         run: |
           sleep 60

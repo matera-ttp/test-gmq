@@ -8,24 +8,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Show files in merge run
-        run: |
-          pwd
-          git status
-          echo "github.ref: ${{ github.ref }}"
-          tree -a -I '.git'
+        with:
+          ref: staging
       - name: Reset staging branch
         uses: Joao208/resync-branch@1.5.0
         with:
           PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
           BRANCH_NAME: staging
-          DEFAULT_BRANCH: main
-      - name: Git status
-        run: |
-          git status
-          echo "github.ref: ${{ github.ref }}"
+          DEFAULT_BRANCH: develop
       - name: Merge PR branch to staging
         uses: devmasx/merge-branch@master
         with:
@@ -35,10 +27,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Get latest commit SHA
         run: |
-          git status
           git fetch origin staging
-          echo "Staging latest commit: $(git rev-parse origin/staging)"
           echo "github.ref: ${{ github.ref }}"
+          echo "Staging latest commit: $(git rev-parse origin/staging)"
+          echo "COMMIT_SHA=$(git rev-parse origin/staging)" >> $GITHUB_ENV
       - name: Sleep and exit
         run: |
           sleep 60

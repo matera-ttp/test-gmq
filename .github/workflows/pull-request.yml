@@ -16,4 +16,4 @@ jobs:
           git status
           ls -al
       - name: Run CI (emulated by sleep)
-        run: sleep 120
+        run: sleep 30

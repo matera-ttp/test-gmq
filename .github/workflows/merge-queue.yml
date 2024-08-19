@@ -4,6 +4,9 @@ on:
 
 jobs:
   validate-pr:
+    concurrency:
+      group: merge-queue
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -4,14 +4,43 @@ on:
 
 jobs:
   validate-pr:
+    concurrency:
+      group: merge-queue
+      cancel-in-progress: false
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout staging
         uses: actions/checkout@v4
-      - name: Show files in merge run
+        with:
+          ref: staging
+      - name: Reset staging branch
+        # uses: Joao208/resync-branch@1.5.0
+        # with:
+        #   PERSONAL_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        #   BRANCH_NAME: staging
+        #   DEFAULT_BRANCH: main
         run: |
-          pwd
-          tree -a -I '.git'
+          echo "github.ref: ${{ github.ref }}"
           git status
-          ls -al
-          sleep 120
+          git branch
+          git fetch origin main
+          git reset --hard origin/main
+          git push origin staging --force
+      - name: Merge PR branch to staging
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: ${{ github.ref }}
+          target_branch: staging
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get latest commit SHA
+        run: |
+          git fetch origin staging
+          echo "github.ref: ${{ github.ref }}"
+          echo "Staging latest commit: $(git rev-parse origin/staging)"
+          echo "COMMIT_SHA=$(git rev-parse origin/staging)" >> $GITHUB_ENV
+      - name: Sleep and exit
+        run: |
+          sleep 60
